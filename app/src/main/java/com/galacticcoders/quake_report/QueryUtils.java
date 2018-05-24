@@ -1,6 +1,23 @@
+/*
+ * Copyright (C) 2016 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.galacticcoders.quake_report;
 
 import android.util.Log;
+
+import com.galacticcoders.quake_report.Earthquake;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -48,24 +65,37 @@ public final class QueryUtils {
         try {
 
             // Create a JSONObject from the SAMPLE_JSON_RESPONSE string
-            JSONObject baseJsonResponce = new JSONObject(SAMPLE_JSON_RESPONSE);
+            JSONObject baseJsonResponse = new JSONObject(SAMPLE_JSON_RESPONSE);
 
             // Extract the JSONArray associated with the key called "features",
             // which represents a list of features (or earthquakes).
-            JSONArray earthquakeArray = baseJsonResponce.getJSONArray("features");
+            JSONArray earthquakeArray = baseJsonResponse.getJSONArray("features");
 
             // For each earthquake in the earthquakeArray, create an {@link Earthquake} object
-            for ( int i = 0; i < earthquakeArray.length(); i++) {
-                // All of our code in the loop
+            for (int i = 0; i < earthquakeArray.length(); i++) {
+
+                // Get a single earthquake at position i within the list of earthquakes
                 JSONObject currentEarthquake = earthquakeArray.getJSONObject(i);
+
+                // For a given earthquake, extract the JSONObject associated with the
+                // key called "properties", which represents a list of all properties
+                // for that earthquake.
                 JSONObject properties = currentEarthquake.getJSONObject("properties");
-                String magnitude = properties.getString("mag");
+
+                // Extract the value for the key called "mag"
+                double magnitude = properties.getDouble("mag");
+
+                // Extract the value for the key called "place"
                 String location = properties.getString("place");
 
                 // Extract the value for the key called "time"
                 long time = properties.getLong("time");
 
+                // Create a new {@link Earthquake} object with the magnitude, location, and time
+                // from the JSON response.
                 Earthquake earthquake = new Earthquake(magnitude, location, time);
+
+                // Add the new {@link Earthquake} to the list of earthquakes.
                 earthquakes.add(earthquake);
             }
 
