@@ -37,7 +37,7 @@ public class Earthquake {
     /**
      * Get the magnitude of the earthquake
      */
-    public String getmagnitude() { return mMagnitude; }
+    public String getMagnitude() { return mMagnitude; }
 
     /**
      * Get the location of the earthquake
