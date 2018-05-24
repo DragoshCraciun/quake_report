@@ -12,7 +12,12 @@
         tools:text="8.9"/>
 
     <TextView
-        android:id="@+id/location_text_view"
+        android:id="@+id/location_offset"
+        style="@style/ListItem"
+        tools:text="30km S of"/>
+
+    <TextView
+        android:id="@+id/primary_location"
         style="@style/ListItem"
         tools:text="San Francisco, CA"/>
 

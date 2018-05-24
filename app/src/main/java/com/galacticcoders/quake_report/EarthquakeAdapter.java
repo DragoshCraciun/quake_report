@@ -17,6 +17,11 @@ import java.util.Date;
 
 public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
 
+    /**
+     * The part of the location string from the USGS service that we use to determine
+     * whether or not there is a location offset present ("5km N of Cairo, Egypt").
+     */
+    private static final String LOCATION_SEPARATOR = " of ";
 
     /**
      * Create a new {@link EarthquakeAdapter} object.
@@ -46,11 +51,47 @@ public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
         // the magnitude_text_view
         magnitudeTextView.setText(currentEarthquake.getMagnitude());
 
-        // Find the TextView in the earthquake_list_item.xml layout with the ID location_text_view
-        TextView locationTextView = listIntemView.findViewById(R.id.location_text_view);
-        // Get the magnitude from the currentEarthquake object and set this text on
-        // the magnitude_text_view
-        locationTextView.setText(currentEarthquake.getLocation());
+        // Get the original location string from the Earthquake object,
+        // which can be in the format of "5km N of Cairo, Egypt" or "Pacific-Antarctic Ridge".
+        String originalLocation = currentEarthquake.getLocation();
+
+        // If the original location string (i.e. "5km N of Cairo, Egypt") contains
+        // a primary location (Cairo, Egypt) and a location offset (5km N of that city)
+        // then store the primary location separately from the location offset in 2 Strings,
+        // so they can be displayed in 2 TextViews.
+        String primaryLocation;
+        String locationOffset;
+
+        // Check whether the originalLocation string contains the " of " text
+        if (originalLocation.contains(LOCATION_SEPARATOR)) {
+
+            // Split the string into different parts (as an array of Strings)
+            // based on the " of " text. We expect an array of 2 Strings, where
+            // the first String will be "5km N" and the second String will be "Cairo, Egypt".
+            String[] parts = originalLocation.split(LOCATION_SEPARATOR);
+
+            // Location offset should be "5km N " + " of " --> "5km N of"
+            locationOffset = parts[0] + LOCATION_SEPARATOR;
+
+            // Primary location should be "Cairo, Egypt"
+            primaryLocation = parts[1];
+        } else {
+            // Otherwise, there is no " of " text in the originalLocation string.
+            // Hence, set the default location offset to say "Near the".
+            locationOffset = getContext().getString(R.string.near_the);
+            // The primary location will be the full location string "Pacific-Antarctic Ridge".
+            primaryLocation = originalLocation;
+        }
+
+        // Find the TextView with view ID location
+        TextView primaryLocationView = (TextView) listIntemView.findViewById(R.id.primary_location);
+        // Display the location of the current earthquake in that TextView
+        primaryLocationView.setText(primaryLocation);
+
+        // Find the TextView with view ID location offset
+        TextView locationOffsetView = (TextView) listIntemView.findViewById(R.id.location_offset);
+        // Display the location offset of the current earthquake in that TextView
+        locationOffsetView.setText(locationOffset);
 
         // Create a new Date object from the time in milliseconds of the earthquake
         Date dateObject = new Date(currentEarthquake.getTimeInMilliseconds());
@@ -68,6 +109,8 @@ public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
         String formattedTime = formatDate(dateObject);
         // Display the time of the current earthquake in that TextView
         timeView.setText(formattedTime);
+
+
 
 
         return listIntemView;

@@ -59,13 +59,13 @@ public final class QueryUtils {
                 // All of our code in the loop
                 JSONObject currentEarthquake = earthquakeArray.getJSONObject(i);
                 JSONObject properties = currentEarthquake.getJSONObject("properties");
-                String manitude = properties.getString("mag");
+                String magnitude = properties.getString("mag");
                 String location = properties.getString("place");
-                
+
                 // Extract the value for the key called "time"
                 long time = properties.getLong("time");
 
-                Earthquake earthquake = new Earthquake(manitude, location, time);
+                Earthquake earthquake = new Earthquake(magnitude, location, time);
                 earthquakes.add(earthquake);
             }
 
