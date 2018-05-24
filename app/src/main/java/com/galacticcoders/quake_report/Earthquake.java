@@ -7,6 +7,7 @@ package com.galacticcoders.quake_report;
 
 public class Earthquake {
 
+
     /**
      * Magnitude of the earthquake
      */
@@ -17,21 +18,20 @@ public class Earthquake {
      */
     private String mLocation;
 
-    /**
-     * Date of the earthquake
-     */
-    private String mDate;
+    /** Time of the earthquake */
+    private long mTimeInMilliseconds;
 
     /**
      * Create a new earthquake object
      * @param magnitude is the magnitude of the earthquake
      * @param location is the location of the earthquake
-     * @param date is the date of the earthquake
+     * @param timeInMilliseconds is the time in miliseconds (from the Epoch) when the
+     *                           earthquake happened.
      */
-    public Earthquake(String magnitude, String location, String date) {
+    public Earthquake(String magnitude, String location, long timeInMilliseconds) {
         mMagnitude = magnitude;
         mLocation = location;
-        mDate = date;
+        mTimeInMilliseconds = timeInMilliseconds;
     }
 
     /**
@@ -45,9 +45,11 @@ public class Earthquake {
     public String getLocation() { return mLocation; }
 
     /**
-     * Get the date of the earthquake
+     * Returns the time of the earthquake.
      */
-    public String getDate() { return mDate; }
+    public long getTimeInMilliseconds() {
+        return mTimeInMilliseconds;
+    }
 
 
 }
